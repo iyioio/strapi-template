@@ -23,6 +23,43 @@ npm run develop
 
 ```
 
+<br/><br/>
+
+## GCloud Setup
+
+1. Create a new GCloud project
+
+2. Create a new Postgress Cloud SQL instance
+
+3. Create a new service account
+  - App Engine Admin
+  - Cloud Build Editor
+  - Cloud Scheduler Admin
+  - Secret Manager Secret Accessor
+  - Service Account User
+  - Storage Admin
+
+4. Create a new key for the service account
+
+5. Create a new GitHub actions secret named "GCP_SA_KEY" and set it's value to the value of the service account key
+
+6. Replace placeholders in gc-config.json
+
+7. Run the apply config script
+``` sh
+npm run apply-config
+```
+
+8. Run the GCloud setup script
+``` sh
+npm run gcloud-setup
+```
+
+<br/><br/>
+
+## Deploying to GCloud
+After completing **GCloud Setup** deploying is done by simply pushing changes to the **deploy** branch
+
 <br/>
 <br/>
 <br/>
