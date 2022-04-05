@@ -1,0 +1,66 @@
+name: Deploy to AppEngine
+'on':
+  push:
+    branches:
+      - deploy
+
+env:
+##CONFIG##
+  G_GC_PROJECT_ID: __GCLOUD_PROJECT_ID__
+  G_GC_REGION: __REGION__europe-west2__
+  G_SECRET_NAME: __NAME__-secrets
+  G_BUCKET_NAME: __NAME__-bucket
+  G_DATABASE_TYPE: postgres
+  G_DATABASE_NAME: __ NAME __-db
+  G_DATABASE_USERNAME: __ NAME__-sql-user
+  G_DATABASE_SERVER_INSTANCE: __CLOUD_SQL_INSTANCE_NAME__
+  G_EMAIL_FROM: rickyboby@example.com
+  G_HOST: 0.0.0.0
+  G_PORT: 8080
+  G_NODE_ENV: production
+  G_DATABASE_CONNECTION: __GCLOUD_PROJECT_ID__:__REGION__europe-west2__:__CLOUD_SQL_INSTANCE_NAME__
+  G_DATABASE_HOST: /cloudsql/__GCLOUD_PROJECT_ID__:__REGION__europe-west2__:__CLOUD_SQL_INSTANCE_NAME__
+##CONFIG##
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Env setup
+        run: |
+          ##CONFIG##
+          echo 'GC_PROJECT_ID=__GCLOUD_PROJECT_ID__' >> .env
+          echo 'GC_REGION=__REGION__europe-west2__' >> .env
+          echo 'SECRET_NAME=__NAME__-secrets' >> .env
+          echo 'BUCKET_NAME=__NAME__-bucket' >> .env
+          echo 'DATABASE_TYPE=postgres' >> .env
+          echo 'DATABASE_NAME=__ NAME __-db' >> .env
+          echo 'DATABASE_USERNAME=__ NAME__-sql-user' >> .env
+          echo 'DATABASE_SERVER_INSTANCE=__CLOUD_SQL_INSTANCE_NAME__' >> .env
+          echo 'EMAIL_FROM=rickyboby@example.com' >> .env
+          echo 'HOST=0.0.0.0' >> .env
+          echo 'PORT=8080' >> .env
+          echo 'NODE_ENV=production' >> .env
+          echo 'DATABASE_CONNECTION=__GCLOUD_PROJECT_ID__:__REGION__europe-west2__:__CLOUD_SQL_INSTANCE_NAME__' >> .env
+          echo 'DATABASE_HOST=/cloudsql/__GCLOUD_PROJECT_ID__:__REGION__europe-west2__:__CLOUD_SQL_INSTANCE_NAME__' >> .env
+          ##CONFIG##
+          gcloud secrets versions access latest --secret $G_SECRET_NAME >> .env
+          echo 'beta_settings:' >> app.yaml
+          echo "  cloud_sql_instances: '$G_DATABASE_CONNECTION'" >> app.yaml
+
+      - id: 'deploy'
+        uses: 'google-github-actions/deploy-appengine@v0'
+        with:
+          project_id: '${{ env.G_GC_PROJECT_ID }}'

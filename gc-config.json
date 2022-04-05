@@ -1,0 +1,14 @@
+{
+  "GC_PROJECT_ID":"__GCLOUD_PROJECT_ID__",
+  "GC_REGION":"__REGION__europe-west2__",
+  "SECRET_NAME":"__NAME__-secrets",
+  "BUCKET_NAME":"__NAME__-bucket",
+  "DATABASE_TYPE":"postgres",
+  "DATABASE_NAME":"__ NAME __-db",
+  "DATABASE_USERNAME":"__ NAME__-sql-user",
+  "DATABASE_SERVER_INSTANCE":"__CLOUD_SQL_INSTANCE_NAME__",
+  "EMAIL_FROM":"rickyboby@example.com",
+  "HOST":"0.0.0.0",
+  "PORT":"8080",
+  "NODE_ENV":"production"
+}
